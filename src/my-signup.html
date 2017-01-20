@@ -1,0 +1,144 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/paper-radio-group/paper-radio-group.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-material/paper-material.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/iron-input/iron-input.html">
+<link rel="import" href="../bower_components/iron-flex-layout/classes/iron-flex-layout.html">
+<link rel="import" href="../bower_components/iron-form/iron-form.html">
+<link rel="import" href="../bower_components/gold-cc-input/gold-cc-input.html">
+<link rel="import" href="../bower_components/gold-email-input/gold-email-input.html">
+<link rel="import" href="../bower_components/gold-cc-cvc-input/gold-cc-cvc-input.html">
+<link rel="import" href="../bower_components/gold-cc-expiration-input/gold-cc-expiration-input.html">
+<link rel="import" href="../bower_components/gold-phone-input/gold-phone-input.html">
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="my-signup">
+  <!-- Defines the element's style and local DOM -->
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+
+      .form-title {
+        margin-bottom: 20px;
+      }
+      
+      .company {
+        color: #3367d6;
+        font-size: 20px;
+        font-weight: 200;
+      }
+
+      .card {
+        background: #FFFFFF;
+        max-width: 400px;
+        padding: 24px;
+        margin: 0 auto;
+      }
+
+      gold-cc-expiration-input {
+        width: 50%;
+        margin-right: 20px;
+      }
+
+      paper-button {
+        background-color: #4285f4;
+        color: #fff;
+        margin-top: 50px;
+        width: 100%;
+      }
+    </style>
+
+    <paper-material class="card" elevation="1">
+      <div class="horizontal layout center form-title">
+        <div class="flex company">Personal Information</div>
+      </div>
+      <form is="iron-form" id="form" method="post" action="/form/handler">
+        <div class="horizontal layout">
+          <paper-input name="name" label="Name" value="{{userData_object.name}}"></paper-input>
+          &emsp;
+          <paper-input name="age" label="Age"></paper-input>
+        </div>
+        <label id="sex">Sex:</label>
+        <paper-radio-group selected="male" aria-labelledby="sex">
+          <paper-radio-button name="male">Male</paper-radio-button>
+          <paper-radio-button name="female">Female</paper-radio-button>
+        </paper-radio-group>
+        <br>
+        <label id="type">Type of people:</label>
+        <paper-radio-group selected="user" aria-labelledby="type">
+          <paper-radio-button name="user">User</paper-radio-button>
+          <paper-radio-button name="retailer">Retailer</paper-radio-button>
+          <paper-radio-button name="ngo">NGO</paper-radio-button>
+        </paper-radio-group>
+        <gold-email-input name="email" label="Email address" placeholder="johndoe@xyz.com"></gold-email-input>
+        <paper-input name="password" label="Password" type="password" value="{{userData_object.pass}}"></paper-input>
+        <paper-input name="address" label="Address"></paper-input>
+        <gold-phone-input name="phone" label="Phone number" country-code="60" maxlength="12"></gold-phone-input>
+        <br><br><br>
+        <div class="horizontal layout center form-title">
+          <div class="flex company">Card Information</div>
+        </div>
+        <paper-input name="card-name" label="Name on card" required autocomplete="cc-name"></paper-input>
+        <gold-cc-input name="cc-number" required auto-validate card-type="{{typeOfCard}}"></gold-cc-input>
+        <div class="horizontal layout">
+          <gold-cc-expiration-input name="cc-expiration" required auto-validate label="Expiration"></gold-cc-expiration-input>
+          <gold-cc-cvc-input name="cc-cvc" required auto-validate card-type="[[typeOfCard]]"></gold-cc-cvc-input>
+        </div>
+        <paper-button on-click="_submit" raised on-tap="_addUserData">Submit</paper-button>
+      </form>
+
+    </paper-material>
+    
+  <iron-localstorage name="userData_array"
+    value="{{userData_array}}"
+    on-iron-localstorage-load="initializeUserData"
+  ></iron-localstorage>
+
+
+
+  </template>
+  <!-- Creates the element's prototype and registers it -->
+  <script>
+    Polymer({
+      is: 'my-signup',
+
+      listeners: {
+        'form.iron-form-submit': '_handleFormSubmit'
+      },
+
+      _submit: function() {
+        this.$.form.submit();
+      },
+
+      _handleFormSubmit: function() {
+        console.log('Signup Completed!');
+      },
+      properties: {
+        userData_object: {
+          type: Object,
+          value: function() {
+            return{};
+          }
+        },
+        userData_array: {
+          type: Array,
+          value: function() {
+            return [];
+          }
+        },
+
+      },
+    initializeUserData: function() {
+      this.userData_array = set("userData_array",this.userData_array);
+    },
+    _addUserData: function(){
+        this.push('userData_array', this.userData_object);
+        this.userData_object = {};
+      },
+
+    });
+  </script>
+</dom-module>

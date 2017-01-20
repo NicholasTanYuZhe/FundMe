@@ -1,0 +1,91 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-material/paper-material.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/gold-email-input/gold-email-input.html">
+<link rel="import" href="../bower_components/iron-form/iron-form.html">
+<link rel="import" href="../bower_components/iron-flex-layout/classes/iron-flex-layout.html">
+<link rel="import" href="../bower_components/iron-input/iron-input.html">
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="my-login">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+
+        padding: 10px;
+      }
+      .form-title {
+        margin-bottom: 20px;
+      }
+      
+      .company {
+        color: #3367d6;
+        font-size: 20px;
+        font-weight: 200;
+      }
+
+      .card {
+        background: #FFFFFF;
+        max-width: 400px;
+        padding: 24px;
+        margin: 0 auto;
+      }
+
+      paper-button {
+        background-color: #4285f4;
+        color: #fff;
+        margin-top: 50px;
+        width: 100%;
+      }
+    </style>
+
+    <paper-material class="card" elevation="1">
+      <form is="iron-form" id="form" method="post" action="/form/handler" style="padding: 30px">
+        <div class="horizontal layout center form-title">
+          <div class="flex company">Login Page</div>
+        </div>
+        <gold-email-input is="iron-input" name="email" label="Email address" placeholder="johndoe@xyz.com"></gold-email-input>
+        <paper-input is="iron-input" name="password" label="Password" type="password"></paper-input>
+        <div class="horizontal layout">
+          <paper-button name="submit" on-click="_submit">Submit</paper-button>
+          <paper-button name="reset" on-click="_reset">Reset</paper-button>
+        </div>
+      </form>
+    </paper-material>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'my-login',
+
+      listeners: {
+        'form.iron-form-submit': '_handleFormSubmit'
+      },
+
+      _submit: function() {
+        this.$.form.submit();
+      },
+
+      _reset: function() {
+        this.$.form.reset();
+      },
+
+      _handleFormSubmit: function() {
+        console.log('Login Completed!');
+        username: Darryl;
+      }
+    });
+  </script>
+</dom-module>

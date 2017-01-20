@@ -1,0 +1,296 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/app-layout/app-grid/app-grid.html">
+<link rel="import" href="../bower_components/app-layout/app-layout.html">
+<link rel="import" href="../bower_components/vaadin-grid/vaadin-grid.html">
+<link rel="import" href="shared-styles.html">
+<link rel="import" href="../bower_components/custom/two-columns-grid.html">
+<link rel="import" href="../bower_components/iron-localstorage/iron-localstorage.html">
+<link rel="import" href="../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../bower_components/iron-media-query/iron-media-query.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../bower_components/paper-dialog-behavior/paper-dialog-behavior.html">
+<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../bower_components/simple-dialog/simple_dialog.js">
+<link rel="import" href="../bower_components/platform/platform.js">
+<link rel="import" href="../bower_components/iron-overlay-behavior/iron-overlay-behavior.html">
+<link rel="import" href="../bower_components/paper-styles/paper-styles.html">
+<link rel="import" href="../bower_components/paper-elements/paper-elements.html">
+<link rel="import" href="../bower_components/paper-toggle-button/paper-toggle-button.html">
+<link rel="import" href="../bower_components/paper-tooltip/paper-tooltip.html">
+<link rel="import" href="../src/ngo_btn.html">
+
+
+
+  <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
+  <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
+<script type="text/javascript" src="../jquery-3.1.1.js"></script>
+
+
+
+<dom-module id="my-home">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+
+        padding: 10px;
+      }
+
+      #card_margin{
+        margin-bottom:160px;
+      }
+
+      #mm, #mf {
+        display: none;
+      }
+
+      [hidden] {
+         display: none;
+      }
+
+      paper-card[hidden] {
+        display: none;
+      }
+
+      .show_hide {
+      display:none;
+      }
+
+      #red_btn{
+
+        background:red;
+        color:white;
+        :;
+      }
+      #green_btn{
+
+        background:green;
+        color:white;
+        :;
+      }
+
+    </style>
+
+
+    <paper-button raised on-tap="toggleDialog2" id="red_btn" >+Request</paper-button>  
+      <paper-dialog id="dialog" style="width:80%; height:70%;">
+      <div class="form" >
+        <paper-input label="description" value="{{request_object.description}}"></paper-input>
+        <paper-input label="owner" value="{{request_object.owner}}"></paper-input>
+        <paper-button raised on-tap="_addRequest">Create Request event</paper-button>
+        <div> 
+            <paper-button raised on-tap="_delRequest">Delete Request event</paper-button>
+        </div>
+      </div>
+      </paper-dialog>
+
+    <two-columns-grid column-width="320" gutter="16">
+
+      <template is="dom-repeat" items="{{fundraising_array}}">
+        <div class= "app-grid" style="--app-grid-columns: 3;" id="card_margin">
+        <paper-card image="../images/fundraising.jpg" alt="Fundraising" >
+          <div class="card-content"> 
+
+            <div>Description: {{item.description}}</div>
+            <div>Owner: {{item.owner}}</div>
+            <div>Fund Needed: {{item.fund}}</div>
+          </div>
+          <div class="card-actions">
+            <paper-button on-tap="toggleDialog_more" >Learn More!</paper-button>
+            
+            <paper-button on-tap="toggleDialog_donate" id="green_btn">Donate</paper-button>
+          </div>
+         
+        </paper-card>
+
+       </div>
+
+
+      </template>
+
+      <paper-dialog id="more" style="width:50%; height:50%;">
+            <div>Description: A basic description</div>
+            <div>Owner: He/she</div>
+            <div>Fund Needed: 1000</div>
+      </paper-dialog>
+      <paper-dialog id="donate" style="width:50%; height:50%;">
+            <div>How much do you want to donate?</div>
+            <paper-input label="fund_donate" value="{{donate_amount.amount}}"></paper-input>
+            <paper-button on-tap="donate_fund">Donate</paper-button>
+      </paper-dialog>
+
+
+      <template is="dom-repeat" items="{{request_array}}">
+        <div class= "app-grid" style="--app-grid-columns: 3;" id="card_margin">
+        <paper-card image="../images/help.GIF" alt="Emmental" >
+          <div class="card-content">          
+            <div>Description: {{item.description}}</div>
+            <div>Owner: {{item.owner}}</div>
+          </div>
+          <div class="card-actions">
+            <paper-button  on-tap="toggleDialog_more" >Learn More!</paper-button>
+            <paper-button raised on-tap="toggleDialog" id="red_btn" >+Fundraising</paper-button>
+          </div>
+        </paper-card>
+       </div>
+      </template>
+      
+    </two-columns-grid>
+
+      <paper-dialog id="dia" style="width:80%; height:70%;">
+        <div class="form">
+        <paper-input label="description" value="{{fundraising_object.description}}"></paper-input>
+        <paper-input label="owner" value="{{fundraising_object.owner}}"></paper-input>
+        <paper-input label="fund" value="{{fundraising_object.fund}}"></paper-input>
+        <br>
+        <paper-button raised on-tap="_addFundraising">Create Fundraising event</paper-button>
+        <div> 
+            <paper-button raised on-tap="_delFundraising">Delete Fundraising event</paper-button>
+          </div>
+      </div>
+      </paper-dialog>
+
+
+
+    <iron-localstorage name="fundraising_array"
+      value="{{fundraising_array}}"
+      on-iron-localstorage-load-empty="initializeStorage">
+    </iron-localstorage>
+    <iron-localstorage name="request_array"
+      value="{{request_array}}"
+      on-iron-localstorage-load-empty="initializeStorage_request">
+    </iron-localstorage>
+
+  </template>
+
+  <script>
+    Polymer({
+      is: 'my-home',
+
+      properties: {
+        donate_amount:{
+          type:Object,
+          value: function() {
+            return{};
+        }
+      },
+        fundraising_object: {
+          type: Object,
+          value: function() {
+            return{};
+          }
+        },
+        fundraising_array: {
+          type: Array,
+          value: function() {
+            return [];
+          }
+
+
+        },
+
+        request_object: {
+          type: Object,
+          value: function() {
+            return{};
+          }
+        },
+        request_array: {
+          type: Array,
+          value: function() {
+            return [];
+          }
+
+
+        }
+      },
+
+
+      _addFundraising: function(){
+        if(isInt(this.fundraising_object.fund) == true){
+          this.push('fundraising_array', this.fundraising_object);
+          this.fundraising_object = {};
+        }
+        else{
+          alert("Enter valid number for fund!");
+        }
+      },
+
+      _delFundraising: function(){
+        this.pop('fundraising_array', this.fundraising_object);
+        this.fundraising_object = {};
+      },
+
+      toggle: function(){
+        this.$.toggleDialog.toggle();
+      },
+
+      _addRequest: function(){
+        this.push('request_array', this.request_object);
+        this.request_object = {};
+      },
+
+      _delRequest: function(){
+        this.pop('request_array', this.request_object);
+        this.request_object = {};
+      },
+
+      initializeStorage_request: function(){
+        this.request_array = [];
+
+      },
+
+      initializeStorage: function(){
+        this.fundraising_array = [];
+
+      },
+      toggleDialog: function() {
+        this.$.dia.toggle();
+      },
+      toggleDialog2: function() {
+        this.$.dialog.toggle();
+      },
+
+      toggleDialog_more: function(){
+        this.$.more.toggle();
+      },
+      toggleDialog_donate: function(){
+        this.$.donate.toggle();
+      },
+      donate_fund: function(){
+      //   // parseInt(this.fundraising_object.fund) =  parseInt(this.fundraising_object.fund) - parseInt(this.donate_amount);
+        alert("Thx for donation");
+      }
+
+              
+    });
+  </script>
+
+    <script type="text/javascript">
+
+     function isInt(value) {
+      return !isNaN(value) && 
+             parseInt(Number(value)) == value && 
+             !isNaN(parseInt(value, 10));
+    }
+
+
+       
+  </script>
+
+</dom-module>
